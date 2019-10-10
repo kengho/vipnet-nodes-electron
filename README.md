@@ -35,7 +35,6 @@ Just run app.
 * insecure sql connection (ViPNet™ administrators should be using ViPNet™ Client that secures connections anyway, won't be fixed)
 * state management is little messy
 * couldn't link nodejs `mssql` package with React despite `nodeIntegration` was set to `true`. As workaround, there's global object `global.sql` that is accessed from React code in order to make queries
-* figure out how to change executable icon from React's logo to ours
 
 # TODO
 
@@ -49,6 +48,7 @@ Just run app.
 * handle electron warnings in console
 * consider using "mssql" module built-in SQL injection protection instead of "sqlstring"
 * figure out how to hide app menu and toggle it by pressing Alt button
+* make selected rows number indicator
 
 # License
 
