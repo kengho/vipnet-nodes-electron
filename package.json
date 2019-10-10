@@ -1,0 +1,71 @@
+{
+  "name": "vipnet-nodes",
+  "description": "App for searching ViPNet™ Nodes in VipNetAdministrator MSSQL database",
+  "version": "0.1.0",
+  "private": true,
+  "author": {
+    "name": "Alexander Morozov",
+    "email": "ntcomp12@gmail.com",
+    "url": "https://kengho.tech"
+  },
+  "build": {
+    "appId": "com.my-website.my-app",
+    "productName": "vipnet-nodes",
+    "copyright": "Copyright © 2019 ${author}",
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.5.0",
+    "@material-ui/icons": "^4.4.3",
+    "electron-is-dev": "^1.1.0",
+    "mssql": "^5.1.0",
+    "react": "^16.10.1",
+    "react-dom": "^16.10.1",
+    "react-scripts": "3.1.2",
+    "react-selectable-fast": "^3.0.0",
+    "sqlstring": "^2.3.1",
+    "vipnet-parser": "^3.0.0"
+  },
+  "homepage": "./",
+  "main": "public/electron.js",
+  "scripts": {
+    "start": "rescripts start",
+    "build": "rescripts build",
+    "test": "rescripts test",
+    "eject": "react-scripts eject",
+    "electron-dev": "concurrently \"yarn start\" \"wait-on http://localhost:3000 && electron .\"",
+    "postinstall": "electron-builder install-app-deps",
+    "preelectron-pack": "yarn build",
+    "electron-pack": "electron-builder",
+    "postelectron-pack": "copy config.json dist\\win-unpacked"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@rescripts/cli": "^0.0.10",
+    "@rescripts/rescript-env": "^0.0.5",
+    "chai": "^4.2.0",
+    "concurrently": "^4.1.0",
+    "dotenv": "^8.1.0",
+    "electron": "^6.0.11",
+    "electron-builder": "^21.2.0",
+    "mocha": "^6.2.1",
+    "wait-on": "^3.3.0"
+  }
+}

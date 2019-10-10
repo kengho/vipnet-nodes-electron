@@ -1,0 +1,17 @@
+{
+  "sql": {
+    "databases": [
+      {
+        "networkNumber": "6670",
+        "server": "db.local\\WINNCCSQL_6670",
+        "database": "VipNetAdministrator",
+        "default": true
+      }, {
+        "networkNumber": "6671",
+        "server": "db.local\\WINNCCSQL_6671",
+        "database": "VipNetAdministrator"
+      },
+    ],
+    "sessionTTL": "32400"
+  }
+}

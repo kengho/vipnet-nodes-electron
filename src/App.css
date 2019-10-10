@@ -1,0 +1,152 @@
+html, body  {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+#app-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+#search-results-button-group {
+  margin-bottom: 6px;
+}
+
+#input-container {
+  width: 90%;
+  display: flex;
+  align-items: center;
+
+  /* For search field button badge. */
+  margin-top: 16px;
+
+}
+
+#input-form {
+  width: 100%;
+}
+
+#logout-button {
+  margin-top: 4px;
+}
+
+#login-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  height: 100%;
+}
+
+#config-error-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+#login-form {
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#login-form button {
+  margin-top: 8px;
+  height: 48px;
+}
+
+#login-container > div {
+  margin: 4px;
+}
+
+#login-container > button {
+  height: 40px;
+}
+
+.error {
+  font-size: 18px;
+  font-weight: 500;
+  color: #f33;
+  margin-top: 8px;
+}
+
+#login-button-group button:first-child {
+  width: 70%;
+}
+
+#login-button-group button:last-child {
+  width: 30%;
+}
+
+#search-results-container {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 90%;
+}
+
+#search-results-selectable-wrapper {
+
+}
+
+#click-away-space {
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+#footer {
+  flex: 0 1 1px;
+}
+
+.search-results-row.selected {
+  background-color: #eeeeef;
+}
+
+.search-results-row.selecting {
+  background-color: #f7f7ff;
+}
+
+#search-results-table-head tr th:first-child,
+.search-results-row td:first-child {
+  width: 24px;
+  padding-right: 8px !important;
+}
+
+#search-results-snackbar div {
+  justify-content: center;
+}
+
+#copy-to-clipboard-button {
+  width: 50%;
+}
+
+#copy-with-headers-button {
+  width: 20%;
+}
+
+#select-all-button {
+  width: 15%;
+}
+
+#deselect-all-button {
+  width: 15%;
+}
+
+.duplicate, .not-found {
+  background-color: #a22;
+}
+
+.duplicate td, .not-found td {
+  color: #eee !important;
+}
+
+.search-results-row:not(.not-found):not(.duplicate) {
+  cursor: pointer;
+}
