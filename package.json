@@ -21,6 +21,9 @@
     ],
     "directories": {
       "buildResources": "assets"
+    },
+    "win": {
+      "icon": "build/icon.png"
     }
   },
   "dependencies": {
