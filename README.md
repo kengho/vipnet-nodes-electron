@@ -48,6 +48,7 @@ Just run app.
 * i18n
 * handle electron warnings in console
 * consider using "mssql" module built-in SQL injection protection instead of "sqlstring"
+* figure out how to hide app menu and toggle it by pressing Alt button
 
 # License
 
