@@ -24,7 +24,6 @@ html, body  {
 
   /* For search field button badge. */
   margin-top: 16px;
-
 }
 
 #input-form {
@@ -39,7 +38,6 @@ html, body  {
   align-items: center;
   display: flex;
   justify-content: center;
-  margin-top: 16px;
   height: 100%;
 }
 
