@@ -26,6 +26,10 @@ const splitIdsAndNamesQueries = (searchQuery) => {
   const namesArray = []
 
   searchArray.forEach((searchItem) => {
+    if (searchItem.length === 0) {
+      return
+    }
+    
     const parsedIds = VipnetParser.id({ string: searchItem, threshold: 0 })
 
     if (parsedIds.length > 0) {

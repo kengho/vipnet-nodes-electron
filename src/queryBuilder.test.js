@@ -24,6 +24,28 @@ WHERE
   expect(actualQuery).to.equal(expectedQuery)
 })
 
+it('should ignore empty names', () => {
+  const { sqlQuery: actualQuery } = queryBuilder({ searchQuery: 'lul1,,' })
+  const expectedQuery =
+`
+SELECT
+\tOffice.vw_LoadNodes.NetNumber as NetNumber,
+\tOffice.vw_LoadNodes.NodeVipnetInnerId as NodeId,
+\tOffice.vw_LoadNodes.Name as NodeName,
+\tNcc.[User].InnerNetworkIdentifier as UserId,
+\tNcc.[User].Name as UserName
+FROM Office.vw_LoadNodes
+INNER JOIN Ncc.NetworkNode
+\tON Office.vw_LoadNodes.NetworkNodeId = Ncc.NetworkNode.ID
+INNER JOIN Ncc.[User]
+\tON Office.vw_LoadNodes.UserId = Ncc.[User].ID
+WHERE
+\t(Office.vw_LoadNodes.Name LIKE '%lul1%')
+`
+
+  expect(actualQuery).to.equal(expectedQuery)
+})
+
 it('should get build query for just nodenames (2)', () => {
   const { sqlQuery: actualQuery } = queryBuilder({ searchQuery: 'lul1,lul2' })
   const expectedQuery =
