@@ -121,20 +121,20 @@ html, body  {
   justify-content: center;
 }
 
+#select-all-button {
+  width: 20%;
+}
+
 #copy-to-clipboard-button {
-  width: 50%;
+  width: 40%;
 }
 
 #copy-with-headers-button {
   width: 20%;
 }
 
-#select-all-button {
-  width: 15%;
-}
-
 #deselect-all-button {
-  width: 15%;
+  width: 20%;
 }
 
 .duplicate, .not-found {

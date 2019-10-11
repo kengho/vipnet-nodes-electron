@@ -35,6 +35,7 @@ Just run app.
 * insecure sql connection (ViPNet™ administrators should be using ViPNet™ Client that secures connections anyway, won't be fixed)
 * state management is little messy
 * couldn't link nodejs `mssql` package with React despite `nodeIntegration` was set to `true`. As workaround, there's global object `global.sql` that is accessed from React code in order to make queries
+* after quick search when you search something heavy search icon badge is bugging
 
 # TODO
 

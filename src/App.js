@@ -27,8 +27,8 @@ class App extends React.Component {
       configErrors: [],
       currentNetworkNumber: undefined,
       isConfigRed: false,
-      logged: false,
-      logging: false,
+      isLogged: false,
+      isLogging: false,
       pool: undefined,
       searching: false,
       searchQuery: '',
@@ -94,7 +94,7 @@ class App extends React.Component {
     evt.preventDefault()
     const config = this.state.config
 
-    this.setState({ logging: true, sqlErrors: [] })
+    this.setState({ isLogging: true, sqlErrors: [] })
 
     const sqlConnectConfig = {
       user: evt.target.elements.user.value,
@@ -109,12 +109,12 @@ class App extends React.Component {
       .then((results) => {
         if (results.errors) {
           console.log(results.errors)
-          this.setState({ logging: false, sqlErrors: results.errors })
+          this.setState({ isLogging: false, sqlErrors: results.errors })
 
           return Promise.reject()
         } else {
           const pool = results
-          this.setState({ logging: false, logged: true, pool, currentNetworkNumber })
+          this.setState({ isLogging: false, isLogged: true, pool, currentNetworkNumber })
 
           setTimeout(this.handleLogout, config.sql.sessionTTL * 1000)
         }
@@ -123,7 +123,7 @@ class App extends React.Component {
 
   handleLogout() {
     global.sql.close()
-    this.setState({ pool: undefined, logged: false })
+    this.setState({ pool: undefined, isLogged: false })
   }
 
   handleInputOnChange(evt) {
@@ -132,10 +132,16 @@ class App extends React.Component {
 
   handleSearch(evt) {
     evt.preventDefault()
+    const {
+      pool,
+      // searching,
+      searchQuery,
+      searchUsers,
+    } = this.state
 
     this.setState({ searchResults: undefined })
 
-    if (this.state.searchQuery.length === 0) {
+    if (searchQuery.length === 0) {
       return
     }
 
@@ -146,18 +152,19 @@ class App extends React.Component {
       idsOrder,
       names,
     } = queryBuilder({
-      searchQuery: this.state.searchQuery,
-      searchUsers: this.state.searchUsers,
+      searchQuery: searchQuery,
+      searchUsers: searchUsers,
     })
 
-    if (!this.state.pool) {
+    if (!pool) {
       // TODO: print error.
       return
     }
 
-    this.state.pool.request().query(sqlQuery)
+    pool.request().query(sqlQuery)
       .then((results) => {
         // Could happen if user cleares search query while app is handeling request.
+        // NOTE: should get state again, not use saved value.
         if (!this.state.searching) {
           return
         }
@@ -165,11 +172,12 @@ class App extends React.Component {
         const searchResults = processRecordset({
           recordset: results.recordset,
           idsOrder,
-          searchUsers: this.state.searchUsers,
+          searchUsers: searchUsers,
           names,
         })
 
-        this.setState({ searchResults, searching: false })
+        this.setState({ searching: false, searchResults })
+
 
       }).catch((e) => console.log(e))
   }
@@ -194,8 +202,8 @@ class App extends React.Component {
       configErrors,
       currentNetworkNumber,
       isConfigRed,
-      logged,
-      logging,
+      isLogged,
+      isLogging,
       searching,
       searchQuery,
       searchResults,
@@ -216,13 +224,13 @@ class App extends React.Component {
     if (!isConfigRed) {
       return ''
     }
-// if (config) {console.log(config)}
-    if (!logged) {
+
+    if (!isLogged) {
       return(
         <LoginForm
           handleLoginAttempt={this.handleLoginAttempt}
           errors={sqlErrors}
-          logging={logging}
+          isLogging={isLogging}
           config={config}
         />
       )
@@ -251,7 +259,7 @@ class App extends React.Component {
                         overlap="circle"
                       >
                         <IconButton
-                          disabled={searchQuery.length === 0}
+                          disabled={searching || searchQuery.length === 0}
                           edge="end"
                           onClick={this.handleSearch}
                           type="submit"
@@ -261,6 +269,7 @@ class App extends React.Component {
                       </Badge>
                       <Tooltip title="Search users instead of nodes (default: off)">
                         <Checkbox
+                          disabled={searching}
                           checked={searchUsers}
                           checkedIcon={<PersonIcon />}
                           color="default"

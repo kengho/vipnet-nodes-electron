@@ -126,9 +126,15 @@ class SearchResults extends React.Component {
 
   render() {
     const {
+      snackbarOpen,
+      selectedRowsProps,
+    } = this.state
+
+    const {
       searchResults,
       searchUsers,
     } = this.props
+
     const displayUsers = searchUsers
 
     return (
@@ -158,10 +164,10 @@ class SearchResults extends React.Component {
               component={Button}
               id="select-all-button"
             >
-              select all
+              {/* \u00A0 - nbsp */`select all\u00A0(${searchResults.length})`}
             </SelectAll>
             <Button
-              disabled={this.state.selectedRowsProps.length === 0}
+              disabled={selectedRowsProps.length === 0}
               id="copy-to-clipboard-button"
               onClick={this.handleCopyToClipboardButtonClick}
               variant="contained"
@@ -169,20 +175,21 @@ class SearchResults extends React.Component {
               copy to clipboard
             </Button>
             <Button
-              disabled={this.state.selectedRowsProps.length === 0}
+              disabled={selectedRowsProps.length === 0}
               id="copy-with-headers-button"
               onClick={this.handleCopyWithHeadersButtonClick}
               variant="contained"
             >
               copy with headers
             </Button>
-            <DeselectAll
-              component={Button}
-              disabled={this.state.selectedRowsProps.length === 0}
-              id="deselect-all-button"
-            >
-              clear selection
-            </DeselectAll>
+
+              <DeselectAll
+                component={Button}
+                disabled={selectedRowsProps.length === 0}
+                id="deselect-all-button"
+              >
+                {`clear selection\u00A0(${selectedRowsProps.length})`}
+              </DeselectAll>
           </ButtonGroup>
           <Paper id="search-results-paper">
             <Table size="small">
@@ -223,7 +230,7 @@ class SearchResults extends React.Component {
           id="search-results-snackbar"
           message="Data copied to clipboard"
           onClose={this.handleSnackbarClose}
-          open={this.state.snackbarOpen}
+          open={snackbarOpen}
         />
       </div>
     )
