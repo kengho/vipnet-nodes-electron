@@ -25,6 +25,7 @@ class App extends React.Component {
     this.state = {
       config: {},
       configErrors: [],
+      currentNetworkNumber: undefined,
       isConfigRed: false,
       logged: false,
       logging: false,
@@ -102,6 +103,8 @@ class App extends React.Component {
       database: config.sql.databases[selectedDatabaseIndex].database,
     }
 
+    const currentNetworkNumber = config.sql.databases[selectedDatabaseIndex].networkNumber
+
     global.sql.login(sqlConnectConfig)
       .then((results) => {
         if (results.errors) {
@@ -111,7 +114,7 @@ class App extends React.Component {
           return Promise.reject()
         } else {
           const pool = results
-          this.setState({ logging: false, logged: true, pool })
+          this.setState({ logging: false, logged: true, pool, currentNetworkNumber })
 
           setTimeout(this.handleLogout, config.sql.sessionTTL * 1000)
         }
@@ -189,6 +192,7 @@ class App extends React.Component {
     const {
       config,
       configErrors,
+      currentNetworkNumber,
       isConfigRed,
       logged,
       logging,
@@ -212,7 +216,7 @@ class App extends React.Component {
     if (!isConfigRed) {
       return ''
     }
-
+// if (config) {console.log(config)}
     if (!logged) {
       return(
         <LoginForm
@@ -229,7 +233,7 @@ class App extends React.Component {
             <form onSubmit={this.handleSearch} id="input-form">
               <TextField
                 autoFocus
-                label="Search"
+                label={`Seach in ${currentNetworkNumber}`}
                 placeholder="Search for IDs and names (separate items by commas)"
                 margin="dense"
                 onChange={(evt) => this.handleInputOnChange(evt)}
