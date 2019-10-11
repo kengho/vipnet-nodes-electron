@@ -53,6 +53,12 @@ class SearchResults extends React.Component {
 
     // Ctlr+C
     if (evt.ctrlKey && evt.code === 'KeyC') {
+      // Allow selection text in duplicate and not found rows.
+      const currentSelection = window.getSelection().toString()
+      if (currentSelection.length > 0) {
+        return
+      }
+
       evt.preventDefault()
       this.handleCopyToClipboardButtonClick()
     }
