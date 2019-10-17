@@ -46,6 +46,13 @@ WHERE
   expect(actualQuery).to.equal(expectedQuery)
 })
 
+it('should not break on multiple commas', () => {
+  const { sqlQuery: actualQuery } = queryBuilder({ searchQuery: ',,,,' })
+  const expectedQuery = undefined
+
+  expect(actualQuery).to.equal(expectedQuery)
+})
+
 it('should get build query for just nodenames (2)', () => {
   const { sqlQuery: actualQuery } = queryBuilder({ searchQuery: 'lul1,lul2' })
   const expectedQuery =

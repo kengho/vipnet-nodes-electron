@@ -29,7 +29,7 @@ const splitIdsAndNamesQueries = (searchQuery) => {
     if (searchItem.length === 0) {
       return
     }
-    
+
     const parsedIds = VipnetParser.id({ string: searchItem, threshold: 0 })
 
     if (parsedIds.length > 0) {
@@ -102,6 +102,10 @@ const buildSqlWhereIdsInLists = ({
   searchUsers,
   allIdsArray,
 }) => {
+  if ((allIdsArray.length === 0) && (namesArray.length === 0)) {
+    return { sqlQuery: undefined }
+  }
+
   const sqlDataLists = buildSqlDataLists(idsByNetworks)
 
   let sqlQuery =
