@@ -101,21 +101,13 @@ function App() {
       return
     }
 
-    const {
-      sqlQuery,
-      idsOrder,
-      names,
-    } = queryBuilder({
-      searchQuery: searchQuery,
-      searchUsers: searchUsers,
-    })
-
-    if (!sqlQuery) {
+    if (!pool) {
+      // TODO: print error.
       return
     }
 
-    if (!pool) {
-      // TODO: print error.
+    const { sqlQuery, idsOrder, names } = queryBuilder({ searchQuery, searchUsers })
+    if (!sqlQuery) {
       return
     }
 
