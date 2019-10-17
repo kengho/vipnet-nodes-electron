@@ -13,6 +13,7 @@ import TextField from '@material-ui/core/TextField'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import './App.css'
+import { version } from './../package.json';
 import LoginForm from './LoginForm'
 import processRecordset from './processRecordset'
 import queryBuilder from './queryBuilder'
@@ -50,7 +51,7 @@ function App() {
   // componentDidMount
   useEffect(() => {
     window.addEventListener('keydown', keyDownHandler)
-    document.title = 'ViPNet Nodes'
+    document.title = `ViPNet Nodes ${version}`
 
     // Read config.
     const fs = require('fs')
