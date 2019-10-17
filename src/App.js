@@ -7,7 +7,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import LogoutIcon from '@material-ui/icons/ExitToApp'
 import PersonIcon from '@material-ui/icons/Person'
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline'
-import React from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import SearchIcon from '@material-ui/icons/Search'
 import TextField from '@material-ui/core/TextField'
 import Tooltip from '@material-ui/core/Tooltip'
@@ -18,71 +18,59 @@ import processRecordset from './processRecordset'
 import queryBuilder from './queryBuilder'
 import SearchResults from './SearchResults'
 
-class App extends React.Component {
-  constructor(props) {
-    super(props)
+function App() {
+  const [config, setConfig] = useState(undefined)
+  const [configErrors, setConfigErrors] = useState([])
+  const [currentNetworkNumber, setCurrentNetworkNumber] = useState(undefined)
+  const [isLogged, setIsLogged] = useState(false)
+  const [isSearching, setIsSearching] = useState(false)
+  const [pool, setPool] = useState(undefined)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState(undefined)
+  const [searchUsers, setSearchUsers] = useState(false)
 
-    this.state = {
-      config: {},
-      configErrors: [],
-      currentNetworkNumber: undefined,
-      isConfigRed: false,
-      isLogged: false,
-      isLogging: false,
-      pool: undefined,
-      searching: false,
-      searchQuery: '',
-      searchResults: undefined,
-      searchUsers: false,
-      sqlErrors: [],
-    }
+  const inputEl = useRef(null)
 
-    this.handleLoginAttempt = this.handleLoginAttempt.bind(this)
-    this.handleLogout = this.handleLogout.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.handleSearchUsersCheckboxClick = this.handleSearchUsersCheckboxClick.bind(this)
-    this.handleClearSearchQueryButtonClick = this.handleClearSearchQueryButtonClick.bind(this)
-    this.keyDownHandler = this.keyDownHandler.bind(this)
-    this.readConfig = this.readConfig.bind(this)
+  // HACK (?): was unable to pass useState setter as prop so it puts searchResultsKeyDownHandler() function to state.
+  //   Need te read docs careful and figure out, maybe that's intended way to do it.
+  const searchResultsKeyDownHandler = useRef(null)
 
-    this.selectableGroupRef = undefined
-    this.inputRef = undefined
-  }
-
-  componentDidMount() {
-    window.addEventListener('keydown', this.keyDownHandler)
+  // componentDidMount
+  useEffect(() => {
+    window.addEventListener('keydown', keyDownHandler)
     document.title = 'ViPNet Nodes'
 
-    this.readConfig()
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.keyDownHandler)
-  }
-
-  readConfig() {
+    // Read config.
     const fs = require('fs')
     const configPath = 'config.json'
     try {
       const rawConfig = fs.readFileSync(configPath)
       const config = JSON.parse(rawConfig)
-      this.setState({ config, isConfigRed: true })
+      setConfig(config)
     } catch (e) {
-      this.setState({ configErrors: [e] })
+      setConfigErrors([e])
       console.log(e)
     }
-  }
+  }, [])
 
-  keyDownHandler(evt) {
-    if (this.searchKeyDownHandler) {
-      this.searchKeyDownHandler(evt)
+  useEffect(() => {
+    if (pool) { // Shouldn't run on component mount.
+      handleSearch()
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchUsers])
+
+  const keyDownHandler = (evt) => {
+    if (searchResultsKeyDownHandler.current) {
+      searchResultsKeyDownHandler.current(evt)
     }
 
     // Ctrl+F
     if (evt.ctrlKey && evt.code === 'KeyF') {
       evt.preventDefault()
-      if (this.inputRef) {
-        const inputHTMLElement = this.inputRef.querySelector('input')
+      if (inputEl.current) {
+        const inputHTMLElement = inputEl.current.querySelector('input')
         if (inputHTMLElement && inputHTMLElement.focus) {
           inputHTMLElement.focus()
         }
@@ -90,62 +78,22 @@ class App extends React.Component {
     }
   }
 
-  handleLoginAttempt(evt, selectedDatabaseIndex) {
-    evt.preventDefault()
-    const config = this.state.config
+  const handleLogout = () => {
+    global.sql.close()
+    setPool(undefined)
+    setIsLogged(false)
+  }
 
-    this.setState({ isLogging: true, sqlErrors: [] })
-
-    const sqlConnectConfig = {
-      user: evt.target.elements.user.value,
-      password: evt.target.elements.password.value,
-      server: config.sql.databases[selectedDatabaseIndex].server,
-      database: config.sql.databases[selectedDatabaseIndex].database,
+  const handleSearch = (evt) => {
+    if (evt) {
+      evt.preventDefault()
     }
 
-    const currentNetworkNumber = config.sql.databases[selectedDatabaseIndex].networkNumber
-
-    global.sql.login(sqlConnectConfig)
-      .then((results) => {
-        if (results.errors) {
-          console.log(results.errors)
-          this.setState({ isLogging: false, sqlErrors: results.errors })
-
-          return Promise.reject()
-        } else {
-          const pool = results
-          this.setState({ isLogging: false, isLogged: true, pool, currentNetworkNumber })
-
-          setTimeout(this.handleLogout, config.sql.sessionTTL * 1000)
-        }
-      })
-  }
-
-  handleLogout() {
-    global.sql.close()
-    this.setState({ pool: undefined, isLogged: false })
-  }
-
-  handleInputOnChange(evt) {
-    this.setState({ searchQuery: evt.target.value })
-  }
-
-  handleSearch(evt) {
-    evt.preventDefault()
-    const {
-      pool,
-      // searching,
-      searchQuery,
-      searchUsers,
-    } = this.state
-
-    this.setState({ searchResults: undefined })
+    setSearchResults(undefined)
 
     if (searchQuery.length === 0) {
       return
     }
-
-    this.setState({ searching: true })
 
     const {
       sqlQuery,
@@ -156,169 +104,143 @@ class App extends React.Component {
       searchUsers: searchUsers,
     })
 
+    if (!sqlQuery) {
+      return
+    }
+
     if (!pool) {
       // TODO: print error.
       return
     }
 
+    setIsSearching(true)
+
+    // TODO: reject promise if user cancels search.
+    //   Couldn't even test this scenario because our DB is too fast.
     pool.request().query(sqlQuery)
       .then((results) => {
-        // Could happen if user cleares search query while app is handeling request.
-        // NOTE: should get state again, not use saved value.
-        if (!this.state.searching) {
-          return
-        }
-
         const searchResults = processRecordset({
           recordset: results.recordset,
           idsOrder,
           searchUsers: searchUsers,
           names,
         })
-
-        this.setState({ searching: false, searchResults })
-
-
+        setSearchResults(searchResults)
+        setIsSearching(false)
       }).catch((e) => console.log(e))
   }
 
-  handleSearchUsersCheckboxClick(evt) {
-    evt.persist()
-    this.setState({ searchUsers: !this.state.searchUsers }, () => this.handleSearch(evt))
+  if (!config) {
+    return ''
   }
 
-  handleClearSearchQueryButtonClick() {
-    this.setState({ searchResults: undefined, searchQuery: '', searching: false })
-  }
-
-  onSearchFieldKeyPressed(evt) {
-    // Allow Ctlr+A and other hotkeys in search field.
-    evt.nativeEvent.stopImmediatePropagation()
-  }
-
-  render() {
-    const {
-      config,
-      configErrors,
-      currentNetworkNumber,
-      isConfigRed,
-      isLogged,
-      isLogging,
-      searching,
-      searchQuery,
-      searchResults,
-      searchUsers,
-      sqlErrors,
-    } = this.state
-
-    if (configErrors.length > 0) {
-      return (
-        <div id="config-error-wrapper">
-          <div className="error">
-            Error reading config.json
-          </div>
+  if (configErrors.length > 0) {
+    return (
+      <div id="config-error-wrapper">
+        <div className="error">
+          Error reading config.json
         </div>
-      )
-    }
+      </div>
+    )
+  }
 
-    if (!isConfigRed) {
-      return ''
-    }
-
-    if (!isLogged) {
-      return(
-        <LoginForm
-          handleLoginAttempt={this.handleLoginAttempt}
-          errors={sqlErrors}
-          isLogging={isLogging}
-          config={config}
-        />
-      )
-    } else {
-      return (
-        <div id="app-container">
-          <div id="input-container">
-            <form onSubmit={this.handleSearch} id="input-form">
-              <TextField
-                autoFocus
-                label={`Seach in ${currentNetworkNumber}`}
-                placeholder="Search for IDs and names (separate items by commas)"
-                margin="dense"
-                onChange={(evt) => this.handleInputOnChange(evt)}
-                onKeyDown={this.onSearchFieldKeyPressed}
-                value={searchQuery}
-                variant="outlined"
-                ref={(r) => this.inputRef = r}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Badge
-                        badgeContent={typeof searchResults === 'object' ? searchResults.length.toString() : undefined}
-                        color="primary"
-                        max={9999}
-                        overlap="circle"
+  if (!isLogged) {
+    return(
+      <LoginForm
+        config={config}
+        handleLogout={handleLogout}
+        onSuccessfulLogin={({ pool, isLogged, currentNetworkNumber }) => {
+          setPool(pool)
+          setIsLogged(true)
+          setCurrentNetworkNumber(currentNetworkNumber)
+        }}
+      />
+    )
+  } else {
+    return (
+      <div id="app-container">
+        <div id="input-container">
+          <form onSubmit={handleSearch} id="input-form">
+            <TextField
+              autoFocus
+              label={`Seach in ${currentNetworkNumber}`}
+              placeholder="Search for IDs and names (separate items by commas)"
+              margin="dense"
+              onChange={(evt) => setSearchQuery(evt.target.value)}
+              onKeyDown={(evt) => evt.nativeEvent.stopImmediatePropagation() /* allow Ctlr+A and other hotkeys in search field */}
+              value={searchQuery}
+              variant="outlined"
+              ref={inputEl}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Badge
+                      badgeContent={typeof searchResults === 'object' ? searchResults.length.toString() : undefined}
+                      color="primary"
+                      max={Infinity}
+                      overlap="circle"
+                    >
+                      <IconButton
+                        disabled={isSearching || searchQuery.length === 0}
+                        edge="end"
+                        onClick={handleSearch}
+                        type="submit"
                       >
+                        <SearchIcon />
+                      </IconButton>
+                    </Badge>
+                    <Tooltip title="Search users instead of nodes (default: off)">
+                      <Checkbox
+                        disabled={isSearching}
+                        checked={searchUsers}
+                        checkedIcon={<PersonIcon />}
+                        color="default"
+                        edge="end"
+                        icon={<PersonOutlineIcon />}
+                        onClick={() => setSearchUsers(!searchUsers)}
+                      />
+                    </Tooltip>
+                    <Tooltip title="Clear search query">
+                      <div>
                         <IconButton
-                          disabled={searching || searchQuery.length === 0}
+                          disabled={searchQuery.length === 0}
                           edge="end"
-                          onClick={this.handleSearch}
-                          type="submit"
+                          onClick={() => {
+                            setSearchResults(undefined)
+                            setSearchQuery('')
+                            setIsSearching(false)
+                          }}
                         >
-                          <SearchIcon />
+                          <CloseIcon />
                         </IconButton>
-                      </Badge>
-                      <Tooltip title="Search users instead of nodes (default: off)">
-                        <Checkbox
-                          disabled={searching}
-                          checked={searchUsers}
-                          checkedIcon={<PersonIcon />}
-                          color="default"
-                          edge="end"
-                          icon={<PersonOutlineIcon />}
-                          onClick={this.handleSearchUsersCheckboxClick}
-                        />
-                      </Tooltip>
-                      <Tooltip title="Clear search query">
-                        <div>
-                          <IconButton
-                            disabled={searchQuery.length === 0}
-                            edge="end"
-                            onClick={this.handleClearSearchQueryButtonClick}
-                            type="submit"
-                          >
-                            <CloseIcon />
-                          </IconButton>
-                        </div>
-                      </Tooltip>
-                    </InputAdornment>
-                  ),
-                }}
-                fullWidth
-              />
-            </form>
-            <Tooltip title="Logout">
-              <IconButton
-                id="logout-button"
-                onClick={this.handleLogout}
-              >
-                <LogoutIcon />
-              </IconButton>
-            </Tooltip>
-          </div>
-          {searching && <CircularProgress />}
-          {!searching && searchResults && searchResults.length > 0 &&
-            <React.Fragment>
-              <SearchResults
-                keyDownHandlerGetter={(f) => this.searchKeyDownHandler = f}
-                searchResults={searchResults}
-                searchUsers={searchUsers}
-                searchFieldInputRef={this.inputRef}
-              />
-            </React.Fragment>
-          }
+                      </div>
+                    </Tooltip>
+                  </InputAdornment>
+                ),
+              }}
+              fullWidth
+            />
+          </form>
+          <Tooltip title="Logout">
+            <IconButton
+              id="logout-button"
+              onClick={handleLogout}
+            >
+              <LogoutIcon />
+            </IconButton>
+          </Tooltip>
         </div>
-      )
-    }
+        {isSearching && <CircularProgress />}
+        {!isSearching && searchResults && searchResults.length > 0 &&
+          <SearchResults
+            liftKeyDownHandler={(f) => searchResultsKeyDownHandler.current = f}
+            searchFieldInputEl={inputEl.current}
+            searchResults={searchResults}
+            searchUsers={searchUsers}
+          />
+        }
+      </div>
+    )
   }
 }
 

@@ -7,139 +7,140 @@ import MenuItem from '@material-ui/core/MenuItem'
 import MenuList from '@material-ui/core/MenuList'
 import Paper from '@material-ui/core/Paper'
 import Popper from '@material-ui/core/Popper'
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import TextField from '@material-ui/core/TextField'
 
-class LoginForm extends React.Component {
-  constructor(props) {
-    super(props)
+function LoginForm({
+  config,
+  handleLogout,
+  onSuccessfulLogin,
+}) {
+  const defaultDatabaseIndex = config.sql.databases
+    .sort((a, b) => a.networkNumber - b.networkNumber)
+    .findIndex((database) => database.default === true)
 
-    const defaultDatabaseIndex = this.props.config.sql.databases
-      .sort((a, b) => a.networkNumber - b.networkNumber)
-      .findIndex((database) => database.default === true)
+  const [selectedDatabaseIndex, setSelectedDatabaseIndex] = useState(defaultDatabaseIndex || 0)
+  const [loginMenuOpen, setLoginMenuOpen] = useState(false)
+  const [isLogging, setIsLogging] = useState(false)
+  const [sqlErrors, setSqlErrors] = useState([])
 
-    this.state = {
-      loginMenuOpen: false,
-      selectedDatabaseIndex: defaultDatabaseIndex || 0,
+  const anchorEl = useRef(null)
+
+  const handleLoginAttempt = (evt, config, selectedDatabaseIndex) => {
+    evt.preventDefault()
+    setIsLogging(true)
+    setSqlErrors([])
+
+    const sqlConnectConfig = {
+      user: evt.target.elements.user.value,
+      password: evt.target.elements.password.value,
+      server: config.sql.databases[selectedDatabaseIndex].server,
+      database: config.sql.databases[selectedDatabaseIndex].database,
     }
 
-    this.handleMenuToggle = this.handleMenuToggle.bind(this)
-    this.handleMenuItemClick = this.handleMenuItemClick.bind(this)
-    this.handleMenuClose = this.handleMenuClose.bind(this)
+    const currentNetworkNumber = config.sql.databases[selectedDatabaseIndex].networkNumber
 
-    this.anchorRef = undefined
+    global.sql.login(sqlConnectConfig)
+      .then((results) => {
+        if (results.errors) {
+          console.log(results.errors)
+          setIsLogging(false)
+          setSqlErrors(results.errors)
+
+          return Promise.reject()
+        } else {
+          setIsLogging(false)
+          onSuccessfulLogin({ isLogged: true, pool: results, currentNetworkNumber })
+          setTimeout(handleLogout, config.sql.sessionTTL * 1000)
+        }
+      })
   }
 
-  handleMenuToggle() {
-    this.setState({ loginMenuOpen: !this.state.loginMenuOpen })
-  }
-
-  handleMenuClose() {
-    this.setState({ loginMenuOpen: false })
-  }
-
-  handleMenuItemClick(evt, optionIndex) {
-    this.setState({
-      selectedDatabaseIndex: optionIndex,
-      loginMenuOpen: false,
-    })
-  }
-
-  render() {
-    const {
-      loginMenuOpen,
-      selectedDatabaseIndex,
-    } = this.state
-
-    const {
-      config,
-      errors,
-      logging,
-    } = this.props
-
-    return (
-      <div id="login-container">
-        <form
-          onSubmit={(evt) => this.props.handleLoginAttempt(evt, selectedDatabaseIndex)}
-          id="login-form"
+  return (
+    <div id="login-container">
+      <form
+        onSubmit={(evt) => handleLoginAttempt(evt, config, selectedDatabaseIndex)}
+        id="login-form"
+      >
+        <TextField
+          autoFocus
+          label="User"
+          margin="dense"
+          name="user"
+          variant="outlined"
+          fullWidth
+        />
+        <TextField
+          label="Password"
+          margin="dense"
+          name="password"
+          type="password"
+          variant="outlined"
+          fullWidth
+        />
+        <ButtonGroup
+          fullWidth
+          variant="contained"
+          color="primary"
+          id="login-button-group"
         >
-          <TextField
-            autoFocus
-            label="User"
-            margin="dense"
-            name="user"
-            variant="outlined"
-            fullWidth
-          />
-          <TextField
-            label="Password"
-            margin="dense"
-            name="password"
-            type="password"
-            variant="outlined"
-            fullWidth
-          />
-          <ButtonGroup
-            fullWidth
-            variant="contained"
+          <Button
+            disabled={isLogging}
+            type="submit"
+          >
+            login to
+          </Button>
+          <Button
             color="primary"
-            id="login-button-group"
+            disabled={isLogging}
+            onClick={() => setLoginMenuOpen(true)}
+            ref={anchorEl}
+            size="small"
           >
-            <Button
-              disabled={logging}
-              type="submit"
+            {config.sql.databases[selectedDatabaseIndex].networkNumber}
+            <ArrowDropDownIcon />
+          </Button>
+        </ButtonGroup>
+        <Popper open={loginMenuOpen} anchorEl={anchorEl.current} transition disablePortal>
+          {({ TransitionProps }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                transformOrigin: 'bottom',
+              }}
             >
-              login to
-            </Button>
-            <Button
-              color="primary"
-              disabled={logging}
-              onClick={this.handleMenuToggle}
-              ref={(r) => this.anchorRef = r}
-              size="small"
-            >
-              {config.sql.databases[selectedDatabaseIndex].networkNumber}
-              <ArrowDropDownIcon />
-            </Button>
-          </ButtonGroup>
-          <Popper open={loginMenuOpen} anchorEl={this.anchorRef} transition disablePortal>
-            {({ TransitionProps }) => (
-              <Grow
-                {...TransitionProps}
-                style={{
-                  transformOrigin: 'bottom',
-                }}
-              >
-                <Paper>
-                  <ClickAwayListener onClickAway={this.handleMenuClose}>
-                    <MenuList>
-                      {config.sql.databases
-                        .sort((a, b) => a.networkNumber - b.networkNumber)
-                        .map((databaseProps, index) => (
-                          <MenuItem
-                            key={databaseProps.networkNumber}
-                            selected={index === selectedDatabaseIndex}
-                            onClick={event => this.handleMenuItemClick(event, index)}
-                          >
-                            {databaseProps.networkNumber}
-                          </MenuItem>
-                      ))}
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>
-          <div
-            className="error"
-            style={{ opacity: errors.length === 0 ? 0 : 1}}
-          >
-            Login error, try again
-          </div>
-        </form>
-      </div>
-    )
-  }
+              <Paper>
+                <ClickAwayListener onClickAway={() => setLoginMenuOpen(false)}>
+                  <MenuList>
+                    {config.sql.databases
+                      .sort((a, b) => a.networkNumber - b.networkNumber)
+                      .map((databaseProps, index) => (
+                        <MenuItem
+                          key={databaseProps.networkNumber}
+                          selected={index === selectedDatabaseIndex}
+                          onClick={(evt) => {
+                            setLoginMenuOpen(false)
+                            setSelectedDatabaseIndex(index)
+                          }}
+                        >
+                          {databaseProps.networkNumber}
+                        </MenuItem>
+                    ))}
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+        <div
+          className="error"
+          style={{ opacity: sqlErrors.length === 0 ? 0 : 1}}
+        >
+          Login error, try again
+        </div>
+      </form>
+    </div>
+  )
 }
 
 export default LoginForm
