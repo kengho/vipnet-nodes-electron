@@ -49,7 +49,6 @@ Just run app.
 * handle electron warnings in console
 * consider using "mssql" module built-in SQL injection protection instead of "sqlstring"
 * figure out how to hide app menu and toggle it by pressing Alt button
-* make selected rows number indicator
 
 # License
 
