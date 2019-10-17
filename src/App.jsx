@@ -163,6 +163,11 @@ function App() {
       />
     )
   } else {
+    let okResultsNumber
+    if (typeof searchResults === 'object') {
+      okResultsNumber = searchResults.filter((searchResult) => searchResult.nodeName && !searchResult.isDuplicate).length
+    }
+
     return (
       <div id="app-container">
         <div id="input-container">
@@ -181,7 +186,7 @@ function App() {
                 endAdornment: (
                   <InputAdornment position="end">
                     <Badge
-                      badgeContent={typeof searchResults === 'object' ? searchResults.length.toString() : undefined}
+                      badgeContent={typeof searchResults === 'object' ? okResultsNumber.toString() : undefined}
                       color="primary"
                       max={Infinity}
                       overlap="circle"
@@ -240,6 +245,7 @@ function App() {
         {!isSearching && searchResults && searchResults.length > 0 &&
           <SearchResults
             liftKeyDownHandler={(f) => searchResultsKeyDownHandler.current = f}
+            okResultsNumber={okResultsNumber}
             searchFieldInputEl={inputEl.current}
             searchResults={searchResults}
             searchUsers={searchUsers}

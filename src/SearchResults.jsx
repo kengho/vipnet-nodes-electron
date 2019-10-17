@@ -18,6 +18,7 @@ function SearchResults({
   searchFieldInputEl,
   liftKeyDownHandler,
   searchResults,
+  okResultsNumber,
   searchUsers,
 }) {
   const [selectedRowsProps, setSelectedRowsProps] = useState([])
@@ -139,7 +140,7 @@ function SearchResults({
             component={Button}
             id="select-all-button"
           >
-            {/* \u00A0 - nbsp */`select all\u00A0(${searchResults.length})`}
+            {/* \u00A0 - nbsp */`select all\u00A0(${okResultsNumber})`}
           </SelectAll>
           <Button
             disabled={selectedRowsProps.length === 0}
