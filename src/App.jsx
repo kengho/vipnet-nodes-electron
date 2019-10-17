@@ -29,6 +29,18 @@ function App() {
   const [searchResults, setSearchResults] = useState(undefined)
   const [searchUsers, setSearchUsers] = useState(false)
 
+  // REVIEW: could it be done better?
+  const handleLogout = () => {
+    global.sql.close()
+    setCurrentNetworkNumber(undefined)
+    setIsLogged(false)
+    setIsSearching(false)
+    setPool(undefined)
+    setSearchQuery('')
+    setSearchResults(undefined)
+    setSearchUsers(false)
+  }
+
   const inputEl = useRef(null)
 
   // HACK (?): was unable to pass useState setter as prop so it puts searchResultsKeyDownHandler() function to state.
@@ -76,12 +88,6 @@ function App() {
         }
       }
     }
-  }
-
-  const handleLogout = () => {
-    global.sql.close()
-    setPool(undefined)
-    setIsLogged(false)
   }
 
   const handleSearch = (evt) => {
