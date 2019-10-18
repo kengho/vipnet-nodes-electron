@@ -50,7 +50,6 @@ function App() {
 
   // componentDidMount
   useEffect(() => {
-    window.addEventListener('keydown', keyDownHandler)
     document.title = `ViPNet Nodes ${version}`
 
     // Read config.
@@ -65,6 +64,14 @@ function App() {
       console.log(e)
     }
   }, [])
+
+  useEffect(() => {
+    window.addEventListener('keydown', keyDownHandler)
+
+    return () => {
+      window.removeEventListener('keydown', keyDownHandler)
+    }
+  })
 
   useEffect(() => {
     if (pool) { // Shouldn't run on component mount.

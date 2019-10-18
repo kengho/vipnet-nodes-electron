@@ -26,13 +26,6 @@ function SearchResults({
 
   const selectableGroupEl = useRef(null)
 
-  // componentDidMount
-  useEffect(() => {
-    liftKeyDownHandler(keyDownHandler)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   const keyDownHandler = (evt) => {
     // Ctrl+A
     if (evt.ctrlKey && evt.code === 'KeyA') {
@@ -54,6 +47,10 @@ function SearchResults({
       handleCopyToClipboardButtonClick()
     }
   }
+
+  useEffect(() => {
+    liftKeyDownHandler(keyDownHandler)
+  })
 
   const handleSelectionFinish = (selectedReactComponents) => {
     setSelectedRowsProps(selectedReactComponents.map(component => component.props))
