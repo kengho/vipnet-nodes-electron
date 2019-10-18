@@ -121,8 +121,7 @@ function SearchResults({
         onSelectionFinish={handleSelectionFinish}
         tolerance={10}
         ignoreList={[
-          '#copy-to-clipboard-button',
-          '#copy-with-headers-button',
+          '#search-results-button-group',
           '.not-found',
           '.duplicate',
         ]}
