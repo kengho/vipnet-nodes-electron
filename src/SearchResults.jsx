@@ -53,7 +53,11 @@ function SearchResults({
   })
 
   const handleSelectionFinish = (selectedReactComponents) => {
-    setSelectedRowsProps(selectedReactComponents.map(component => component.props))
+    setSelectedRowsProps(
+      selectedReactComponents
+        .sort((a, b) => a.props.orderNumber - b.props.orderNumber)
+        .map(component => component.props)
+    )
 
     // This code loses focus from search field after row click.
     // TODO: consider removing this after this issue is resolved:
