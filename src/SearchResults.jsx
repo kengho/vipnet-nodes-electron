@@ -179,16 +179,16 @@ function SearchResults({
             </TableHead>
             <TableBody>
               {searchResults.map((searchResult, i) =>
-                  <SelectableSearchResultsRow
-                    nodeId={searchResult.nodeId}
-                    nodeName={searchResult.nodeName}
-                    userId={searchResult.userId}
-                    userName={searchResult.userName}
-                    displayUsers={displayUsers}
-                    isDuplicate={searchResult.isDuplicate}
-                    key={`${searchResult.nodeId}-${i}`}
-                    orderNumber={i + 1}
-                  />
+                <SelectableSearchResultsRow
+                  nodeId={searchResult.nodeId}
+                  nodeName={searchResult.nodeName}
+                  userId={searchResult.userId}
+                  userName={searchResult.userName}
+                  displayUsers={displayUsers}
+                  isDuplicate={searchResult.isDuplicate}
+                  key={`${searchResult.nodeId}-${i}`}
+                  orderNumber={i + 1}
+                />
               )}
             </TableBody>
           </Table>
