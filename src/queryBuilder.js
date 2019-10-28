@@ -1,12 +1,45 @@
 import { escape } from 'sqlstring'
-
-// import VipnetParser from './vipnet-parser/index.js'
 import VipnetParser from 'vipnet-parser'
 
-export default ({ searchQuery, searchUsers = false }) => {
+import demoData from './demoData.json'
 
+export default ({ searchQuery, searchUsers = false, demo }) => {
   const [allIdsArray, namesArray] = splitIdsAndNamesQueries(searchQuery)
   const idsByNetworks = splitIdsByNetworks(allIdsArray)
+
+  if (demo) {
+    const result = {
+      sqlQuery: '',
+      idsOrder: allIdsArray,
+      names: namesArray,
+    }
+
+    if (searchQuery === demoData['DEMO1_QUERY']) {
+      if (searchUsers) {
+        result.sqlQuery = 'DEMO1_USERS'
+      } else {
+        result.sqlQuery = 'DEMO1_NODES'
+      }
+    }
+
+    if (searchQuery === demoData['DEMO2_QUERY']) {
+      if (searchUsers) {
+        result.sqlQuery = 'DEMO2_USERS'
+      } else {
+        result.sqlQuery = 'DEMO2_NODES'
+      }
+    }
+
+    if (searchQuery === demoData['DEMO3_QUERY']) {
+      if (searchUsers) {
+        result.sqlQuery = 'DEMO3_USERS'
+      } else {
+        result.sqlQuery = 'DEMO3_NODES'
+      }
+    }
+
+    return result
+  }
 
   return buildSqlWhereIdsInLists({
     idsByNetworks,

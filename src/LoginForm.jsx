@@ -10,6 +10,8 @@ import Popper from '@material-ui/core/Popper'
 import React, { useRef, useState } from 'react'
 import TextField from '@material-ui/core/TextField'
 
+import demoData from './demoData.json'
+
 function LoginForm({
   config,
   handleLogout,
@@ -36,11 +38,12 @@ function LoginForm({
       password: evt.target.elements.password.value,
       server: config.sql.databases[selectedDatabaseIndex].server,
       database: config.sql.databases[selectedDatabaseIndex].database,
+      demo: config.demo,
     }
 
     const currentNetworkNumber = config.sql.databases[selectedDatabaseIndex].networkNumber
 
-    global.sql.login(sqlConnectConfig)
+    global.sql.login(sqlConnectConfig, demoData)
       .then((results) => {
         if (results.errors) {
           console.log(results.errors)
@@ -64,14 +67,14 @@ function LoginForm({
       >
         <TextField
           autoFocus
-          label="User"
+          label={config.demo ? "User (in demo: anything)" : "User"}
           margin="dense"
           name="user"
           variant="outlined"
           fullWidth
         />
         <TextField
-          label="Password"
+          label={config.demo ? "Password (also anything)" : "Password"}
           margin="dense"
           name="password"
           type="password"

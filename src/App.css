@@ -148,3 +148,18 @@ html, body  {
 .search-results-row:not(.not-found):not(.duplicate) {
   cursor: pointer;
 }
+
+#demo-footer-container {
+  position: absolute;
+  bottom: 0px;
+}
+
+#demo-footer-container ul {
+  margin-top: 4px;
+  list-style-type: square;
+  color: #333;
+}
+
+#demo-footer-container span {
+  color: #f33;
+}

@@ -1,0 +1,248 @@
+{
+  "DEMO1_QUERY": "Justa,Dionne,Claretha,Heike,Lapp,Ruby,Branan,Marna,Machado,Annalee,Atnip,Cliff",
+  "DEMO1_NODES": [
+    {
+      "NetNumber": 6670,
+      "NodeId": 1,
+      "NodeName": "Justa Stall",
+      "UserId": 2,
+      "UserName": "Justa Stall"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 2,
+      "NodeName": "Dionne Branstetter",
+      "UserId": 3,
+      "UserName": "Dionne Branstetter"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 3,
+      "NodeName": "Claretha Blaker",
+      "UserId": 4,
+      "UserName": "Claretha Blaker"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 6,
+      "NodeName": "Heike Argo",
+      "UserId": 7,
+      "UserName": "Heike Argo"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 7,
+      "NodeName": "Calista Lapp",
+      "UserId": 8,
+      "UserName": "Calista Lapp"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 8,
+      "NodeName": "Ruby Champney",
+      "UserId": 9,
+      "UserName": "Ruby Champney"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 9,
+      "NodeName": "Ouida Branan",
+      "UserId": 10,
+      "UserName": "Ouida Branan"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 10,
+      "NodeName": "Marna Doe",
+      "UserId": 11,
+      "UserName": "Marna Doe"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 11,
+      "NodeName": "Charolette Machado",
+      "UserId": 12,
+      "UserName": "Charolette Machado"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 12,
+      "NodeName": "Annalee Schempp",
+      "UserId": 13,
+      "UserName": "Annalee Schempp"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 13,
+      "NodeName": "Donita Atnip",
+      "UserId": 14,
+      "UserName": "Donita Atnip"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 14,
+      "NodeName": "Cliff Schor",
+      "UserId": 5,
+      "UserName": "Cliff Schor"
+    }
+  ],
+  "DEMO1_USERS": [
+    {
+      "NetNumber": 6670,
+      "NodeId": 1,
+      "NodeName": "Justa Stall",
+      "UserId": 2,
+      "UserName": "Justa Stall"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 2,
+      "NodeName": "Dionne Branstetter",
+      "UserId": 3,
+      "UserName": "Dionne Branstetter"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 3,
+      "NodeName": "Claretha Blaker",
+      "UserId": 4,
+      "UserName": "Claretha Blaker"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 4,
+      "NodeName": "Heike Argo",
+      "UserId": 5,
+      "UserName": "Heike Argo Claretha"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 6,
+      "NodeName": "Heike Argo",
+      "UserId": 7,
+      "UserName": "Heike Argo"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 7,
+      "NodeName": "Calista Lapp",
+      "UserId": 8,
+      "UserName": "Calista Lapp"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 8,
+      "NodeName": "Ruby Champney",
+      "UserId": 9,
+      "UserName": "Ruby Champney"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 9,
+      "NodeName": "Ouida Branan",
+      "UserId": 10,
+      "UserName": "Ouida Branan"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 10,
+      "NodeName": "Marna Doe",
+      "UserId": 11,
+      "UserName": "Marna Doe"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 11,
+      "NodeName": "Charolette Machado",
+      "UserId": 12,
+      "UserName": "Charolette Machado"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 12,
+      "NodeName": "Annalee Schempp",
+      "UserId": 13,
+      "UserName": "Annalee Schempp"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 13,
+      "NodeName": "Donita Atnip",
+      "UserId": 14,
+      "UserName": "Donita Atnip"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 14,
+      "NodeName": "Cliff Schor",
+      "UserId": 5,
+      "UserName": "Cliff Schor"
+    }
+  ],
+  "DEMO2_QUERY": "Luther,1A0E0002",
+  "DEMO2_NODES": [
+    {
+      "NetNumber": 6670,
+      "NodeId": 5,
+      "NodeName": "Luther Polzin",
+      "UserId": 6,
+      "UserName": "Luther Polzin"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 2,
+      "NodeName": "Dionne Branstetter",
+      "UserId": 3,
+      "UserName": "Dionne Branstetter"
+    }
+  ],
+  "DEMO2_USERS": [
+    {
+      "NetNumber": 6670,
+      "NodeId": 5,
+      "NodeName": "Luther Polzin",
+      "UserId": 6,
+      "UserName": "Luther Polzin"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 1,
+      "NodeName": "Justa Stall",
+      "UserId": 2,
+      "UserName": "Justa Stall"
+    }
+  ],
+  "DEMO3_QUERY": "1A0E0002,1A0E0002,1A0E0003,1B0E0001",
+  "DEMO3_NODES": [
+      {
+      "NetNumber": 6670,
+      "NodeId": 2,
+      "NodeName": "Dionne Branstetter",
+      "UserId": 3,
+      "UserName": "Dionne Branstetter"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 3,
+      "NodeName": "Claretha Blaker",
+      "UserId": 4,
+      "UserName": "Claretha Blaker"
+    }
+  ],
+  "DEMO3_USERS": [
+    {
+      "NetNumber": 6670,
+      "NodeId": 1,
+      "NodeName": "Justa Stall",
+      "UserId": 2,
+      "UserName": "Justa Stall"
+    },
+    {
+      "NetNumber": 6670,
+      "NodeId": 2,
+      "NodeName": "Dionne Branstetter",
+      "UserId": 3,
+      "UserName": "Dionne Branstetter"
+    }
+  ]
+}

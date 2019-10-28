@@ -10,8 +10,9 @@
         "networkNumber": "6671",
         "server": "db.local\\WINNCCSQL_6671",
         "database": "VipNetAdministrator"
-      },
+      }
     ],
     "sessionTTL": "32400"
-  }
+  },
+  "demo": false
 }

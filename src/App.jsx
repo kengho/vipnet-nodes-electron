@@ -14,6 +14,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 
 import './App.css'
 import { version } from './../package.json';
+import DemoFooter from './DemoFooter'
 import LoginForm from './LoginForm'
 import processRecordset from './processRecordset'
 import queryBuilder from './queryBuilder'
@@ -114,7 +115,7 @@ function App() {
       return
     }
 
-    const { sqlQuery, idsOrder, names } = queryBuilder({ searchQuery, searchUsers })
+    const { sqlQuery, idsOrder, names } = queryBuilder({ searchQuery, searchUsers, demo: config.demo })
     if (!sqlQuery) {
       return
     }
@@ -251,6 +252,7 @@ function App() {
             searchUsers={searchUsers}
           />
         }
+        {config.demo && <DemoFooter />}
       </div>
     )
   }
