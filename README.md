@@ -4,6 +4,7 @@ Goal was to create standalone app for smart querying ViPNet™ MSSQL database fo
 
 And it does exactly that.
 
+
 # Demo
 
 [Demo build (90 MB packed, 300 MB unpacked)](https://public-files.kengho.tech/vipnet-nodes-electron-demo_v0.1.5.zip).
@@ -11,6 +12,8 @@ And it does exactly that.
 Disclaimer: run on you own risk!
 
 Alternative: you can build demo yourself by running `yarn install && yarn electron-dev` and changing `demo` to `true` in `config.json`.
+
+![image of demo](/doc/screenshot1.png)
 
 # Setup
 
