@@ -3,7 +3,22 @@ import VipnetParser from 'vipnet-parser'
 
 import demoData from './demoData.json'
 
-export default ({ searchQuery, searchUsers = false, demo }) => {
+export default ({ searchQuery, searchUsers = false, demo, currentNetworkNumber }) => {
+  // Handle "!top 10 6670"-type queries first.
+  const topQueryRegexp = /!top\s(\d+)(\s)?(\d+)?/
+  const match = searchQuery.match(topQueryRegexp)
+  if (match) {
+    const topNumber = match[1]
+    let networkNumber
+    if (match[3]) {
+      networkNumber = match[3]
+    } else {
+      networkNumber = currentNetworkNumber
+    }
+
+    return buildSqlTopQuery({ topNumber, networkNumber })
+  }
+
   const [allIdsArray, namesArray] = splitIdsAndNamesQueries(searchQuery)
   const idsByNetworks = splitIdsByNetworks(allIdsArray)
 
@@ -181,4 +196,27 @@ ${namesArray.map((name) =>
     idsOrder: allIdsArray,
     names: namesArray,
   }
+}
+
+const buildSqlTopQuery = ({ topNumber, networkNumber }) => {
+  let sqlQuery =
+`
+SELECT TOP ${topNumber}
+\tOffice.vw_LoadNodes.NetNumber as NetNumber,
+\tOffice.vw_LoadNodes.NodeVipnetInnerId as NodeId,
+\tOffice.vw_LoadNodes.Name as NodeName,
+\tNcc.[User].InnerNetworkIdentifier as UserId,
+\tNcc.[User].Name as UserName
+FROM Office.vw_LoadNodes
+INNER JOIN Ncc.NetworkNode
+\tON Office.vw_LoadNodes.NetworkNodeId = Ncc.NetworkNode.ID
+INNER JOIN Ncc.[User]
+\tON Office.vw_LoadNodes.UserId = Ncc.[User].ID
+WHERE Office.vw_LoadNodes.NetNumber = ${networkNumber}
+ORDER BY Office.vw_LoadNodes.NodeVipnetInnerId DESC
+`
+
+  sqlQuery = sqlQuery.replace(/[\r\n]{2,}/g, "\n")
+
+  return { sqlQuery }
 }

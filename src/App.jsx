@@ -115,7 +115,16 @@ function App() {
       return
     }
 
-    const { sqlQuery, idsOrder, names } = queryBuilder({ searchQuery, searchUsers, demo: config.demo })
+    const {
+      sqlQuery,
+      idsOrder,
+      names,
+    } = queryBuilder({
+      searchQuery,
+      searchUsers,
+      demo: config.demo,
+      currentNetworkNumber,
+    })
     if (!sqlQuery) {
       return
     }

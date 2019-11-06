@@ -1,7 +1,7 @@
 export default ({ recordset, idsOrder, names, searchUsers }) => {
   const searchResults = []
 
-  if (names.length === 0) {
+  if (idsOrder && idsOrder.length > 0 && names && names.length === 0) {
     const idsDuplicatesCache = {}
 
     idsOrder.forEach((ordersNormalId, i) => {
