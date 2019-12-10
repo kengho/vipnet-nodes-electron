@@ -3,7 +3,7 @@ import { SelectableGroup, SelectAll, DeselectAll } from 'react-selectable-fast'
 import Button from '@material-ui/core/Button'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Paper from '@material-ui/core/Paper'
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, memo } from 'react'
 import SelectableSearchResultsRow from './SearchResultsRow'
 import Snackbar from '@material-ui/core/Snackbar'
 import Table from '@material-ui/core/Table'
@@ -140,7 +140,7 @@ function SearchResults({
             component={Button}
             id="select-all-button"
           >
-            {/* \u00A0 - nbsp */`select all\u00A0(${okResultsNumber})`}
+            {/* \u00A0 - nbsp*/}{`select all\u00A0(${okResultsNumber})`}
           </SelectAll>
           <Button
             disabled={selectedRowsProps.length === 0}
@@ -204,11 +204,11 @@ function SearchResults({
         autoHideDuration={2000}
         id="search-results-snackbar"
         message="Data copied to clipboard"
-        onClose={() => setSnackbarOpen(false)}
+        onClose={() => {console.log('here');setSnackbarOpen(false)}}
         open={snackbarOpen}
       />
     </div>
   )
 }
 
-export default React.memo(SearchResults, areEqual)
+export default memo(SearchResults, areEqual)
