@@ -5,6 +5,9 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const isDev = require('electron-is-dev')
 
+const contextMenu = require('electron-context-menu')
+contextMenu()
+
 let mainWindow
 
 function createWindow() {
