@@ -123,7 +123,7 @@ function SearchResults({
         globalMouse={false}
         mixedDeselect
         onSelectionFinish={handleSelectionFinish}
-        tolerance={10}
+        tolerance={1 /* 0 = could select 2 lines at once; 10 = sometimes couldn't any; 1 = can't select exactly at border */}
         ignoreList={[
           '#search-results-button-group',
           '.not-found',
