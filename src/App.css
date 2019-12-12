@@ -104,11 +104,11 @@ html, body  {
 }
 
 .search-results-row.selected {
-  background-color: #cccccf;
+  background-color: #e0e0e7;
 }
 
 .search-results-row.selecting {
-  background-color: #f7f7ff;
+  background-color: #eeeeee;
 }
 
 #search-results-table-head tr th:first-child,
