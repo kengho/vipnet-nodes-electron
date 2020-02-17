@@ -8,17 +8,26 @@ const isDev = require('electron-is-dev')
 const contextMenu = require('electron-context-menu')
 contextMenu()
 
+const windowStateKeeper = require('electron-window-state')
 let mainWindow
 
 function createWindow() {
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: 680,
+    defaultHeight: 680
+  })
+
   mainWindow = new BrowserWindow({
-    width: 680,
-    height: 680,
+    'x': mainWindowState.x,
+    'y': mainWindowState.y,
+    'width': mainWindowState.width,
+    'height': mainWindowState.height,
     webPreferences: {
       nodeIntegration: true,
     },
     icon: __dirname + '/favicon.ico',
   })
+  mainWindowState.manage(mainWindow)
   // mainWindow.removeMenu()
   mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`)
   if (isDev) {
