@@ -1,7 +1,7 @@
 {
   "name": "vipnet-nodes",
   "description": "App for searching ViPNet™ Nodes in VipNetAdministrator MSSQL database",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "private": true,
   "author": {
     "name": "Alexander Morozov",

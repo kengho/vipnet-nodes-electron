@@ -64,6 +64,14 @@ export default ({ searchQuery, searchUsers = false, demo, currentNetworkNumber }
   })
 }
 
+const transformSqlWildcards = (name) => {
+  return name
+    .replace('_', '[_]', 'g')
+    .replace('%', '[%]', 'g')
+    .replace('.*', '%', 'g')
+    .replace('.', '_', 'g')
+}
+
 // "1a0e000a,1A0E000b,lul,0x1a0f000c"
 // =>
 // ["0x1a0e000a", "0x1a0e000b", "0x1a0f000c"] // allIdsArray
@@ -183,7 +191,7 @@ ${(sqlDataLists.length > 0) ? sqlDataLists.map((sqlDataList) =>
 ).join("\n\tOR\n") : ''}
 ${(namesArray.length > 0 && sqlDataLists.length > 0) ? "\tOR" : ''}
 ${namesArray.map((name) =>
-`\t(${searchUsers ? 'Ncc.[User].Name' : 'Office.vw_LoadNodes.Name'} LIKE ${escape(`%${name}%`)})`
+`\t(${searchUsers ? 'Ncc.[User].Name' : 'Office.vw_LoadNodes.Name'} LIKE ${escape(`%${transformSqlWildcards(name)}%`)})`
 ).join("\n\tOR\n")}
 `
 
