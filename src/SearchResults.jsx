@@ -128,6 +128,8 @@ function SearchResults({
           '#search-results-button-group',
           '.not-found',
           '.duplicate',
+          '#click-away-space',
+          '#footer',
         ]}
         ref={selectableGroupEl}
       >
@@ -156,16 +158,17 @@ function SearchResults({
             onClick={handleCopyWithHeadersButtonClick}
             variant="contained"
           >
-            copy with headers
+            copy with<br />headers
           </Button>
           <DeselectAll
             component={Button}
             disabled={selectedRowsProps.length === 0}
             id="deselect-all-button"
           >
-            {`clear selection\u00A0(${selectedRowsProps.length})`}
+            clear<br />selection{`\u00A0(${selectedRowsProps.length})`}
           </DeselectAll>
         </ButtonGroup>
+        <div id="search-results-paper-wrapper">
         <Paper id="search-results-paper">
           <Table size="small">
             <TableHead id="search-results-table-head">
@@ -193,9 +196,10 @@ function SearchResults({
             </TableBody>
           </Table>
         </Paper>
+        <div id="click-away-space" onClick={() => {selectableGroupEl.current.clearSelection(); console.log('asd');}} />
+        <div id="footer" />
+        </div>
       </SelectableGroup>
-      <div id="click-away-space" onClick={() => selectableGroupEl.current.clearSelection()} />
-      <div id="footer" />
       <Snackbar
         anchorOrigin={{
           vertical: 'bottom',
@@ -204,7 +208,7 @@ function SearchResults({
         autoHideDuration={2000}
         id="search-results-snackbar"
         message="Data copied to clipboard"
-        onClose={() => {console.log('here');setSnackbarOpen(false)}}
+        onClose={() => setSnackbarOpen(false)}
         open={snackbarOpen}
       />
     </div>

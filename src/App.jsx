@@ -195,21 +195,24 @@ function App() {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Badge
-                      badgeContent={typeof searchResults === 'object' ? okResultsNumber.toString() : undefined}
-                      color="primary"
-                      max={Infinity}
-                      overlap="circle"
-                    >
-                      <IconButton
-                        disabled={isSearching || searchQuery.length === 0}
-                        edge="end"
-                        onClick={handleSearch}
-                        type="submit"
+                    {isSearching && <CircularProgress size="28px" />}
+                    {!isSearching &&
+                      <Badge
+                        badgeContent={typeof searchResults === 'object' ? okResultsNumber.toString() : undefined}
+                        color="primary"
+                        max={Infinity}
+                        overlap="circle"
                       >
-                        <SearchIcon />
-                      </IconButton>
-                    </Badge>
+                        <IconButton
+                          disabled={searchQuery.length === 0}
+                          edge="end"
+                          onClick={handleSearch}
+                          type="submit"
+                        >
+                          <SearchIcon />
+                        </IconButton>
+                      </Badge>
+                    }
                     <Tooltip title="Search users instead of nodes (default: off)">
                       <Checkbox
                         disabled={isSearching}
@@ -251,7 +254,6 @@ function App() {
             </IconButton>
           </Tooltip>
         </div>
-        {isSearching && <CircularProgress />}
         {!isSearching && searchResults && searchResults.length > 0 &&
           <SearchResults
             liftKeyDownHandler={(f) => searchResultsKeyDownHandler.current = f}

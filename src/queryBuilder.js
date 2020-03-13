@@ -29,27 +29,19 @@ export default ({ searchQuery, searchUsers = false, demo, currentNetworkNumber }
       names: namesArray,
     }
 
-    if (searchQuery === demoData['DEMO1_QUERY']) {
-      if (searchUsers) {
-        result.sqlQuery = 'DEMO1_USERS'
-      } else {
-        result.sqlQuery = 'DEMO1_NODES'
-      }
-    }
+    // NOTE: TODO: demos wasn't intended to have complicated handlers,
+    //   thus simple fat structure and strange code to deal with it.
+    //   demoData.json format probably could be optimized.
+    const demosNumber = Object.keys(demoData).length / 3 // query, nodes, users
+    for (let demoNumber = 1; demoNumber <= demosNumber; demoNumber ++) {
+      if (searchQuery === demoData[`DEMO${demoNumber}_QUERY`]) {
+        if (searchUsers) {
+          result.sqlQuery = `DEMO${demoNumber}_USERS`
+        } else {
+          result.sqlQuery = `DEMO${demoNumber}_NODES`
+        }
 
-    if (searchQuery === demoData['DEMO2_QUERY']) {
-      if (searchUsers) {
-        result.sqlQuery = 'DEMO2_USERS'
-      } else {
-        result.sqlQuery = 'DEMO2_NODES'
-      }
-    }
-
-    if (searchQuery === demoData['DEMO3_QUERY']) {
-      if (searchUsers) {
-        result.sqlQuery = 'DEMO3_USERS'
-      } else {
-        result.sqlQuery = 'DEMO3_NODES'
+        break
       }
     }
 

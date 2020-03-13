@@ -7,7 +7,7 @@ And it does exactly that.
 
 # Demo
 
-[Demo build (90 MB packed, 300 MB unpacked)](https://public-files.kengho.tech/vipnet-nodes-electron-demo_v0.1.5.zip).
+[Demo build (90 MB packed, 300 MB unpacked)](https://public-files.kengho.tech/vipnet-nodes-electron-demo_v0.1.13.zip).
 
 Disclaimer: run on you own risk!
 
